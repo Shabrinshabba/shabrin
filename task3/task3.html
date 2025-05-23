@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Responsive Design</title>
+<style>
+  /* Reset and base */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin:0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #f0f0f5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  h1, h2 {
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    text-align: center;
+    color: #f0efff;
+    text-shadow: 0 3px 8px rgba(0,0,0,0.5);
+  }
+  h1 {
+    font-size: 2.8rem;
+  }
+  h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+  }
+  p.intro {
+    color: #dcdcffdd;
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto 40px auto;
+    text-align: center;
+    line-height: 1.5;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.35);
+  }
+  .container {
+    max-width: 900px;
+    width: 100%;
+    background: linear-gradient(145deg, #4b398b, #6f54c9);
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+    padding: 30px;
+    margin-bottom: 40px;
+    color: #edeeff;
+  }
+
+  /* --- IMAGE CAROUSEL --- */
+  .carousel {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgb(0 0 0 / 0.38);
+    max-width: 500px;
+    max-height: 300px;
+    margin: 0 auto;
+  }
+  .carousel-images {
+    display: flex;
+    transition: transform 0.6s ease;
+    height: 300px;
+  }
+  .carousel-images img {
+    width: 100%;
+    height: 300px;
+    border-radius: 16px;
+    user-select: none;
+    pointer-events: none;
+    filter: drop-shadow(0 0 6px rgba(0,0,0,0.3));
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  .carousel-controls {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    pointer-events: none;
+  }
+  button.prev, button.next {
+    pointer-events: auto;
+    background: rgba(255 255 255 / 0.15);
+    border: none;
+    color: #edeeff;
+    font-size: 2.2rem;
+    padding: 10px 18px;
+    border-radius: 50%;
+    cursor: pointer;
+    position: absolute;
+    transform: translateY(-50%);
+    top: 50%;
+    user-select: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    box-shadow: 0 0 8px rgba(255 255 255 / 0.4);
+  }
+  button.prev:hover, button.next:hover {
+    background: #9479e4;
+    color: #fff;
+    box-shadow: 0 0 14px #b7a6ff;
+  }
+  button.prev {
+    left: 14px;
+  }
+  button.next {
+    right: 14px;
+  }
+  .carousel-dots {
+    text-align: center;
+    padding: 14px 0 0 0;
+  }
+  .carousel-dots button {
+    background: #a199dfaa;
+    border: none;
+    width: 16px;
+    height: 16px;
+    margin: 0 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 0 6px rgba(255 255 255 / 0.6);
+  }
+  .carousel-dots button.active {
+    background: #c1b7ff;
+    box-shadow: 0 0 14px #d3cffd;
+  }
+
+  /* --- API FETCH SECTION --- */
+  .api-section {
+    text-align: center;
+  }
+  .joke-box {
+    background: linear-gradient(145deg, #7762b560, #9e83ff99);
+    padding: 25px 30px;
+    border-radius: 16px;
+    box-shadow: inset 4px 4px 10px #37289490, inset -4px -4px 14px #a599ff90;
+    font-size: 1.25rem;
+    color: #edeeffdd;
+    min-height: 90px;
+    margin-bottom: 20px;
+    user-select: text;
+    text-shadow: 0 0 3px rgba(0,0,0,0.3);
+  }
+  button#fetch-joke {
+    background: #b299ff;
+    border: none;
+    color: #3b2375;
+    font-weight: 700;
+    padding: 14px 32px;
+    border-radius: 36px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(178,160,255,0.75);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  button#fetch-joke:hover {
+    background: #956df9;
+    color: #fbf9ff;
+    box-shadow: 0 12px 28px rgba(128,108,255,0.9);
+  }
+
+  /* --- QUIZ SECTION --- */
+  #quiz {
+    font-size: 1.15rem;
+    color: #edeeffdd;
+  }
+  #quiz h3 {
+    font-size: 1.8rem;
+    margin-bottom: 18px;
+    color: #d4cdfc;
+    text-align: center;
+    text-shadow: 0 1px 5px rgba(0,0,0,0.5);
+  }
+  #quiz .question-text {
+    margin-bottom: 24px;
+    font-weight: 600;
+    color: #d9ccff;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+  }
+  #quiz ul.answers {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 24px;
+  }
+  #quiz ul.answers li {
+    margin-bottom: 14px;
+  }
+  #quiz ul.answers li label {
+    display: block;
+    background: rgba(147, 109, 225, 0.38);
+    border-radius: 16px;
+    padding: 16px 22px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+    user-select: none;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.3);
+    color: #f0eaff;
+  }
+  #quiz ul.answers li:hover label {
+    background-color: rgba(182, 146, 255, 0.6);
+  }
+  #quiz ul.answers li input[type="radio"] {
+    display: none;
+  }
+  #quiz ul.answers li input[type="radio"]:checked + label {
+    border-color: #c1aaff;
+    background-color: #d9ccff;
+    font-weight: 700;
+    color: #463478;
+    box-shadow: 0 0 8px #cca8ffaa inset;
+  }
+  #quiz .quiz-navigation {
+    display: flex;
+    justify-content: space-between;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+  #quiz button {
+    background: #bba0ff;
+    border: none;
+    color: #3b2375;
+    padding: 14px 32px;
+    font-size: 1.05rem;
+    border-radius: 36px;
+    cursor: pointer;
+    box-shadow: 0 7px 22px rgba(178,160,255,0.7);
+    user-select: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  #quiz button[disabled] {
+    background: #7e6cd5aa;
+    cursor: default;
+    color: #c6bbf1;
+    box-shadow: none;
+  }
+  #quiz button:hover:not([disabled]) {
+    background: #8c7ff7;
+    color: #f4efff;
+    box-shadow: 0 9px 28px rgba(160,126,255,0.9);
+  }
+  #quiz .quiz-result {
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #d2bef9;
+    margin-top: 30px;
+    text-shadow: 0 1px 5px rgba(0,0,0,0.6);
+  }
+  #quiz .quiz-result span {
+    color: #efe7ff;
+    text-shadow: 0 0 8px #c1aaff;
+  }
+
+  /* Responsive Layout & Typography */
+  @media only screen and (max-width: 600px) {
+    h1 {
+      font-size: 2rem;
+    }
+    h2 {
+      font-size: 1.4rem;
+    }
+    p.intro {
+      font-size: 1rem;
+      margin-bottom: 30px;
+    }
+    .container {
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+    button.prev, button.next {
+      font-size: 1.5rem;
+      padding: 6px 12px;
+    }
+    .joke-box {
+      font-size: 1rem;
+      padding: 18px 20px;
+    }
+    button#fetch-joke {
+      padding: 10px 20px;
+      font-size: 1rem;
+    }
+    #quiz button {
+      padding: 10px 24px;
+      font-size: 1rem;
+    }
+    /* Carousel smaller height on mobile */
+    .carousel {
+      max-width: 100%;
+      max-height: 220px;
+    }
+    .carousel-images {
+      height: 220px;
+    }
+    .carousel-images img {
+      height: 220px;
+    }
+  }
+
+  @media only screen and (min-width: 601px) and (max-width: 900px) {
+    h1 {
+      font-size: 2.4rem;
+    }
+    h2 {
+      font-size: 1.6rem;
+    }
+    p.intro {
+      font-size: 1.05rem;
+      margin-bottom: 35px;
+    }
+    .container {
+      padding: 25px;
+      margin-bottom: 35px;
+    }
+    button.prev, button.next {
+      font-size: 1.8rem;
+      padding: 7px 14px;
+    }
+    .joke-box {
+      font-size: 1.15rem;
+      padding: 20px 25px;
+    }
+    button#fetch-joke {
+      padding: 11px 24px;
+      font-size: 1.05rem;
+    }
+    #quiz button {
+      padding: 11px 28px;
+      font-size: 1.1rem;
+    }
+    /* Slightly bigger carousel on tablets */
+    .carousel {
+      max-width: 450px;
+      max-height: 270px;
+    }
+    .carousel-images {
+      height: 270px;
+    }
+    .carousel-images img {
+      height: 270px;
+    }
+  }
+
+  @media only screen and (min-width: 901px) {
+    .container {
+      margin-bottom: 60px;
+    }
+    /* Default carousel size on desktop */
+    .carousel {
+      max-width: 500px;
+      max-height: 300px;
+    }
+    .carousel-images {
+      height: 300px;
+    }
+    .carousel-images img {
+      height: 300px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<h1>Responsive design</h1>
+<p class="intro">
+  Demonstrating responsive design, an interactive image carousel, dynamic quiz, and data fetching from an external API — all in a sleek, modern, single-page experience.
+</p>
+
+<!-- IMAGE CAROUSEL SECTION -->
+<section class="container" aria-label="Image Carousel">
+  <h2>Image Carousel</h2>
+  <div class="carousel" id="carousel" role="region" aria-roledescription="carousel" aria-live="polite">
+    <div class="carousel-images" id="carousel-images" style="transform: translateX(0%);">
+      <img src="https://wallpapercave.com/wp/wp3987786.jpg" />
+      <img src="https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=900&q=80" alt="Ocean waves crashing on rocks" draggable="false" />
+      <img src="https://th.bing.com/th/id/R.4a315f4a49f2b29a80ac19f128dd05ab?rik=tgLOW1fRXqmuiA&riu=http%3a%2f%2f3.bp.blogspot.com%2f-2Y_AUY9mJfc%2fUhBNTf0-0dI%2fAAAAAAAAoxk%2fkUav9xxrhkw%2fs1600%2fPrabhas%2bHD%2bWallpapers%2b10.jpg&ehk=LWft37S4pGkP%2fN85ndlsK4npbgIy%2f8dWX9aOi0uVe0w%3d&risl=&pid=ImgRaw&r=0" />
+      <img src="https://a.travel-assets.com/findyours-php/viewfinder/images/res70/507000/507808-istanbul.jpg" />
+      <img src="https://th.bing.com/th/id/R.d8fb702359fe1bb318630fba1446b8c6?rik=epKUjUv%2bDNuhUw&riu=http%3a%2f%2f2.bp.blogspot.com%2f-OsWwzcAF6Kk%2fVcO9sqf2s1I%2fAAAAAAAAB2A%2f_msicY-wygA%2fs1600%2fprabhas-raju-uppalapati_155780.jpg&ehk=FKKee%2b55eD%2bXvFu13LUFnyPeRpRCxUoYsBEoKrTMlv8%3d&risl=&pid=ImgRaw&r=0" />
+    </div>
+    <div class="carousel-controls">
+      <button class="prev" aria-label="Previous Slide">&#10094;</button>
+      <button class="next" aria-label="Next Slide">&#10095;</button>
+    </div>
+    <div class="carousel-dots" role="tablist" aria-label="Carousel Pagination">
+      <button aria-label="Go to slide 1" role="tab" aria-selected="true" class="active"></button>
+      <button aria-label="Go to slide 2" role="tab" aria-selected="false"></button>
+      <button aria-label="Go to slide 3" role="tab" aria-selected="false"></button>
+      <button aria-label="Go to slide 4" role="tab" aria-selected="false"></button>
+      <button aria-label="Go to slide 5" role="tab" aria-selected="false"></button>
+    </div>
+  </div>
+</section>
+
+<!-- API Fetch Section -->
+<section class="container api-section" aria-label="Joke API Fetch">
+  <h2>Random Joke Generator</h2>
+  <div class="joke-box" id="joke-box" aria-live="polite" aria-atomic="true">
+    Click the button below for a funny joke!
+  </div>
+  <button id="fetch-joke" aria-label="Fetch a new joke">Get a Joke</button>
+</section>
+
+<!-- QUIZ SECTION -->
+<section class="container" id="quiz-section" aria-label="Interactive Quiz">
+  <h2>Interactive Quiz</h2>
+  <div id="quiz" role="form" aria-live="polite" aria-atomic="true">
+    <h3 id="question-title">Question Text</h3>
+    <div class="question-text" id="question-text"></div>
+    <ul class="answers" id="answers-list">
+      <!-- Answers dynamically inserted here -->
+    </ul>
+    <div class="quiz-navigation">
+      <button id="prev-btn" aria-label="Previous Question">Previous</button>
+      <button id="next-btn" aria-label="Next Question">Next</button>
+    </div>
+    <div class="quiz-result" id="quiz-result" aria-live="polite" aria-atomic="true" style="display:none;"></div>
+  </div>
+</section>
+
+<script>
+  // IMAGE CAROUSEL LOGIC
+  (function() {
+    const carouselImages = document.getElementById('carousel-images');
+    const slides = carouselImages.children;
+    const prevBtn = document.querySelector('.prev');
+    const nextBtn = document.querySelector('.next');
+    const dots = document.querySelectorAll('.carousel-dots button');
+    let currentIndex = 0;
+    const totalSlides = slides.length;
+
+    function updateCarousel(index) {
+      if (index < 0) index = totalSlides - 1;
+      if (index >= totalSlides) index = 0;
+      carouselImages.style.transform = `translateX(-${index * 100}%)`;
+      currentIndex = index;
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+        dot.setAttribute('aria-selected', i === index ? 'true' : 'false');
+      });
+    }
+
+    prevBtn.addEventListener('click', () => {
+      updateCarousel(currentIndex - 1);
+    });
+
+    nextBtn.addEventListener('click', () => {
+      updateCarousel(currentIndex + 1);
+    });
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        updateCarousel(i);
+      });
+    });
+  })();
+
+  // API Data Fetch Logic - Joke API
+  (function() {
+    const jokeBox = document.getElementById('joke-box');
+    const fetchButton = document.getElementById('fetch-joke');
+
+    async function fetchJoke() {
+      fetchButton.disabled = true;
+      fetchButton.textContent = "Fetching...";
+      try {
+        const response = await fetch('https://official-joke-api.appspot.com/random_joke');
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
+        jokeBox.textContent = data.setup + " " + data.punchline;
+      } catch (error) {
+        jokeBox.textContent = "Oops! Couldn't fetch a joke. Try again later.";
+      } finally {
+        fetchButton.disabled = false;
+        fetchButton.textContent = "Get a Joke";
+      }
+    }
+
+    window.addEventListener('load', fetchJoke);
+    fetchButton.addEventListener('click', fetchJoke);
+  })();
+
+  // QUIZ LOGIC
+  (function() {
+    const quizData = [
+      {
+        question: "Which language runs in a web browser?",
+        answers: ["Java", "C", "Python", "JavaScript"],
+        correct: 3
+      },
+      {
+        question: "What does CSS stand for?",
+        answers: ["Central Style Sheets", "Cascading Style Sheets", "Cascading Simple Sheets", "Cars SUVs Sailboats"],
+        correct: 1
+      },
+      {
+        question: "What does HTML stand for?",
+        answers: ["Hypertext Markup Language", "Hypertext Markdown Language", "Hyperloop Machine Language", "Helicopters Terminals Motorboats Lamborginis"],
+        correct: 0
+      },
+      {
+        question: "What year was JavaScript launched?",
+        answers: ["1996", "1995", "1994", "None of the above"],
+        correct: 1
+      },
+      {
+        question: "Which symbol is used for comments in JavaScript?",
+        answers: ["//", "/* */", "#", "<!-- -->"],
+        correct: 0
+      }
+    ];
+
+    let currentQuestionIndex = 0;
+    const userAnswers = Array(quizData.length).fill(null);
+
+    const questionTitle = document.getElementById('question-title');
+    const questionText = document.getElementById('question-text');
+    const answersList = document.getElementById('answers-list');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const resultContainer = document.getElementById('quiz-result');
+
+    function renderQuestion(index) {
+      const q = quizData[index];
+      questionTitle.textContent = `Question ${index + 1} of ${quizData.length}`;
+      questionText.textContent = q.question;
+      answersList.innerHTML = '';
+      q.answers.forEach((answer, i) => {
+        const li = document.createElement('li');
+        const input = document.createElement('input');
+        input.type = 'radio';
+        input.name = 'answer';
+        input.id = `answer${i}`;
+        input.value = i;
+        input.checked = userAnswers[index] === i;
+        input.setAttribute('aria-describedby', 'question-text');
+        input.addEventListener('change', () => {
+          userAnswers[index] = i;
+          updateNavigationButtons();
+        });
+        const label = document.createElement('label');
+        label.htmlFor = `answer${i}`;
+        label.textContent = answer;
+        li.appendChild(input);
+        li.appendChild(label);
+        answersList.appendChild(li);
+      });
+      updateNavigationButtons();
+      resultContainer.style.display = "none";
+    }
+
+    function updateNavigationButtons() {
+      prevBtn.disabled = currentQuestionIndex === 0;
+      nextBtn.textContent = currentQuestionIndex === quizData.length - 1 ? "Submit" : "Next";
+      nextBtn.disabled = userAnswers[currentQuestionIndex] === null;
+    }
+
+    function showResults() {
+      let correctCount = 0;
+      quizData.forEach((q,i) => {
+        if(userAnswers[i] === q.correct) correctCount++;
+      });
+      resultContainer.innerHTML = `You answered <span>${correctCount}</span> out of <span>${quizData.length}</span> questions correctly!`;
+      resultContainer.style.display = "block";
+      questionTitle.textContent = "Quiz Completed!";
+      questionText.textContent = "Thank you for participating.";
+      answersList.innerHTML = '';
+      prevBtn.disabled = true;
+      nextBtn.disabled = false;
+      nextBtn.textContent = "Restart";
+    }
+
+    prevBtn.addEventListener('click', () => {
+      if(currentQuestionIndex > 0){
+        currentQuestionIndex--;
+        renderQuestion(currentQuestionIndex);
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if(currentQuestionIndex < quizData.length - 1){
+        currentQuestionIndex++;
+        renderQuestion(currentQuestionIndex);
+      } else {
+        // Submit quiz/show results
+        if(nextBtn.textContent === "Submit"){
+          showResults();
+        } else if(nextBtn.textContent === "Restart") {
+          // Reset quiz to start
+          userAnswers.fill(null);
+          currentQuestionIndex = 0;
+          renderQuestion(currentQuestionIndex);
+          resultContainer.style.display = "none";
+        }
+      }
+    });
+
+    // Initialize quiz
+    renderQuestion(currentQuestionIndex);
+
+  })();
+</script>
+</body>
+</html>
+
