@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mohammed Shabrin's Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+    .particle-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: linear-gradient(135deg, #4b6cb7, #182848);
+      overflow: hidden;
+    }
+    .cherry-blossom {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #fb7185;
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: fall 10s linear infinite;
+    }
+    @keyframes fall {
+      0% { transform: translateY(-100vh) rotate(0deg); opacity: 0.7; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+    .project-card, .task-item {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .project-card:hover, .task-item:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 0 10px #14b8a6;
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .task-item.completed {
+      opacity: 0.7;
+      background-color: #e0f7fa;
+    }
+    .progress-bar {
+      transition: width 0.5s ease;
+    }
+    .nav-link:hover {
+      color: #fb7185;
+    }
+    .dark .nav-link:hover {
+      color: #f43f5e;
+    }
+    .anime-button {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .anime-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transition: 0.5s;
+    }
+    .anime-button:hover::before {
+      left: 100%;
+    }
+    h1, h2, h3 {
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    }
+    .error-message {
+      color: #ef4444;
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+      display: none;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white transition-colors duration-300">
+  <!-- Navigation -->
+  <nav class="bg-white dark:bg-gray-800 shadow-md fixed w-full z-10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex-shrink-0">
+          <a href="#" class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">Mohammed Shabrin</a>
+        </div>
+        <div class="hidden md:flex space-x-8">
+          <a href="#about" class="nav-link text-gray-600 dark:text-gray-300 hover:text-rose-500 dark:hover:text-rose-300">About</a>
+          <a href="#projects" class="nav-link text-gray-600 dark:text-gray-300 hover:text-rose-500 dark:hover:text-rose-300">Projects</a>
+          <a href="#todo" class="nav-link text-gray-600 dark:text-gray-300 hover:text-rose-500 dark:hover:text-rose-300">To-Do List</a>
+          <a href="#contact" class="nav-link text-gray-600 dark:text-gray-300 hover:text-rose-500 dark:hover:text-rose-300">Contact</a>
+          <button id="theme-toggle" class="text-gray-600 dark:text-gray-300 hover:text-rose-500 dark:hover:text-rose-300">Toggle Theme</button>
+        </div>
+        <div class="md:hidden">
+          <button id="menu-toggle" class="text-gray-600 dark:text-gray-300 hover:text-rose-500 dark:hover:text-rose-300 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-gray-800 shadow-md">
+      <div class="px-4 pt-2 pb-3 space-y-1">
+        <a href="#about" class="nav-link block text-gray-600 dark:text-gray-300 hover:text-rose-500 dark:hover:text-rose-300">About</a>
+        <a href="#projects" class="nav-link block text-gray-600 dark:text-gray-300 hover:text-rose-500 dark:hover:text-rose-300">Projects</a>
+        <a href="#todo" class="nav-link block text-gray-600 dark:text-gray-300 hover:text-rose-500 dark:hover:text-rose-300">To-Do List</a>
+        <a href="#contact" class="nav-link block text-gray-600 dark:text-gray-300 hover:text-rose-500 dark:hover:text-rose-300">Contact</a>
+        <button id="mobile-theme-toggle" class="block text-gray-600 dark:text-gray-300 hover:text-rose-500 dark:hover:text-rose-300">Toggle Theme</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section with Anime Background -->
+  <section class="min-h-screen flex items-center justify-center relative overflow-hidden">
+    <div id="particle-canvas" class="particle-bg"></div>
+    <div class="text-center px-4 z-10">
+      <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-white fade-in">Hi, I'm Mohammed Shabrin</h1>
+      <p class="text-lg sm:text-xl mb-4 text-white fade-in">Innovative MCA Student | Aspiring Data Analyst</p>
+      <p class="text-md mb-6 text-rose-300 fade-in">Crafting Tech with a Shonen Spirit</p>
+      <a href="#projects" class="anime-button bg-rose-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-rose-600 dark:bg-rose-300 dark:text-gray-800 dark:hover:bg-rose-400 fade-in">Explore My Work</a>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="py-16 bg-gradient-to-b from-teal-50 to-white dark:from-teal-900 dark:to-gray-800">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold text-center mb-8 text-teal-600 dark:text-teal-300 fade-in">About Me</h2>
+      <div class="flex flex-col md:flex-row items-center">
+        <div class="md:w-1/3 mb-6 md:mb-0">
+          <img src="https://via.placeholder.com/300" alt="Profile" class="rounded-full w-48 h-48 mx-auto fade-in">
+        </div>
+        <div class="md:w-2/3 md:pl-8">
+          <p class="text-lg leading-relaxed text-gray-800 dark:text-gray-200 fade-in">
+            I'm Mohammed Shabrin, an MCA student at Aditya University, Rajahmundry, with a passion for leveraging technology to solve real-world problems. Skilled in Java, Python, and web development, I have hands-on experience in AI and web projects through internships. My goal is to become a data analyst, driving impactful solutions with my optimism, leadership, and adaptability. I enjoy dancing, music, and exploring new books, finding inspiration in anime's vibrant storytelling.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects Section -->
+  <section id="projects" class="py-16 bg-gradient-to-b from-rose-50 to-gray-100 dark:from-rose-900 dark:to-gray-900">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold text-center mb-8 text-rose-600 dark:text-rose-300 fade-in">My Projects</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="project-card bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-rose-500 dark:border-rose-300 fade-in">
+          <h3 class="text-xl font-semibold mb-2 text-indigo-600 dark:text-indigo-400">Safer Roads</h3>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">A cutting-edge project using AI sensors to enhance road safety by detecting obstacles and predicting hazards in real-time, built with Python and machine learning algorithms.</p>
+          <a href="#" class="text-teal-500 dark:text-teal-300 hover:underline">View Project</a>
+        </div>
+        <div class="project-card bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-rose-500 dark:border-rose-300 fade-in">
+          <h3 class="text-xl font-semibold mb-2 text-indigo-600 dark:text-indigo-400">AI-Powered Analytics</h3>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">An innovative AI project focused on data analysis and predictive modeling, utilizing Python and TensorFlow to deliver actionable insights.</p>
+          <a href="#" class="text-teal-500 dark:text-teal-300 hover:underline">View Project</a>
+        </div>
+        <div class="project-card bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-rose-500 dark:border-rose-300 fade-in">
+          <h3 class="text-xl font-semibold mb-2 text-indigo-600 dark:text-indigo-400">Web Development Platform</h3>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">A dynamic web application built with HTML, CSS, and JavaScript, featuring responsive design and interactive user interfaces for seamless experiences.</p>
+          <a href="#" class="text-teal-500 dark:text-teal-300 hover:underline">View Project</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- To-Do List Section -->
+  <section id="todo" class="py-16 bg-gradient-to-b from-indigo-50 to-white dark:from-indigo-900 dark:to-gray-800">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold text-center mb-8 text-indigo-600 dark:text-indigo-400 fade-in">My To-Do List</h2>
+      <div class="max-w-md mx-auto">
+        <div class="mb-4">
+          <input type="text" id="task-input" class="w-full p-3 border border-teal-500 rounded-md dark:bg-gray-700 dark:border-teal-300 focus:ring-teal-500 focus:ring-2" placeholder="Add a new task...">
+          <select id="category" class="mt-2 w-full p-3 border border-teal-500 rounded-md dark:bg-gray-700 dark:border-teal-300">
+            <option value="Work">Work</option>
+            <option value="Personal">Personal</option>
+          </select>
+          <select id="priority" class="mt-2 w-full p-3 border border-teal-500 rounded-md dark:bg-gray-700 dark:border-teal-300">
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+          </select>
+          <button id="add-task" class="anime-button mt-2 w-full bg-teal-500 text-white p-3 rounded-md hover:bg-teal-600 dark:bg-teal-300 dark:text-gray-800 dark:hover:bg-teal-400">Add Task</button>
+        </div>
+        <div class="mb-4">
+          <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-4">
+            <div id="progress-bar" class="progress-bar bg-indigo-600 h-4 rounded-full" style="width: 0%"></div>
+          </div>
+          <p class="text-sm text-center mt-2 text-gray-600 dark:text-gray-300">Completion: <span id="progress-text">0%</span></p>
+        </div>
+        <ul id="task-list" class="space-y-2"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="py-16 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-800">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold text-center mb-8 text-rose-600 dark:text-rose-300 fade-in">Get in Touch</h2>
+      <div class="max-w-lg mx-auto">
+        <form id="contact-form" class="space-y-6">
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
+            <input type="text" id="name" class="mt-1 block w-full p-3 border border-teal-500 rounded-md dark:bg-gray-700 dark:border-teal-300 focus:ring-teal-500 focus:ring-2" required>
+            <p id="name-error" class="error-message">Please enter a valid name.</p>
+          </div>
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+            <input type="email" id="email" class="mt-1 block w-full p-3 border border-teal-500 rounded-md dark:bg-gray-700 dark:border-teal-300 focus:ring-teal-500 focus:ring-2" required>
+            <p id="email-error" class="error-message">Please enter a valid email address.</p>
+          </div>
+          <div>
+            <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Message</label>
+            <textarea id="message" rows="4" class="mt-1 block w-full p-3 border border-teal-500 rounded-md dark:bg-gray-700 dark:border-teal-300 focus:ring-teal-500 focus:ring-2" required></textarea>
+            <p id="message-error" class="error-message">Please enter a message.</p>
+          </div>
+          <button type="submit" id="submit-button" class="anime-button w-full bg-rose-500 text-white p-3 rounded-md hover:bg-rose-600 dark:bg-rose-300 dark:text-gray-800 dark:hover:bg-rose-400 disabled:opacity-50 disabled:cursor-not-allowed">Send Message</button>
+        </form>
+        <p id="form-message" class="mt-4 text-center text-teal-500 dark:text-teal-300 hidden">Message sent successfully!</p>
+        <p id="form-error" class="mt-4 text-center text-red-500 dark:text-red-400 hidden">Please fix the errors above.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-6">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="mt-4 flex justify-center space-x-4">
+        <a href="https://www.linkedin.com/in/mdshabrin" class="text-teal-300 hover:text-teal-400">LinkedIn</a>
+        <a href="#" class="text-teal-300 hover:text-teal-400">GitHub</a>
+        <a href="#" class="text-teal-300 hover:text-teal-400">Twitter</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Cherry Blossom Particles
+    const particleCanvas = document.getElementById('particle-canvas');
+    function createBlossom() {
+      const blossom = document.createElement('div');
+      blossom.className = 'cherry-blossom';
+      blossom.style.left = Math.random() * 100 + 'vw';
+      blossom.style.animationDuration = Math.random() * 5 + 5 + 's';
+      particleCanvas.appendChild(blossom);
+      setTimeout(() => blossom.remove(), 10000);
+    }
+    setInterval(createBlossom, 300);
+
+    // Dark Mode Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
+    const html = document.documentElement;
+    themeToggle.addEventListener('click', () => {
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
+    mobileThemeToggle.addEventListener('click', () => {
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
+    if (localStorage.getItem('theme') === 'dark') {
+      html.classList.add('dark');
+    }
+
+    // Mobile Menu Toggle
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuToggle.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Smooth Scrolling and Fade-In Animations
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+        mobileMenu.classList.add('hidden');
+      });
+    });
+    const fadeIns = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+    fadeIns.forEach(element => observer.observe(element));
+
+    // Contact Form Submission
+    const contactForm = document.getElementById('contact-form');
+    const formMessage = document.getElementById('form-message');
+    const formError = document.getElementById('form-error');
+    const submitButton = document.getElementById('submit-button');
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const messageInput = document.getElementById('message');
+    const nameError = document.getElementById('name-error');
+    const emailError = document.getElementById('email-error');
+    const messageError = document.getElementById('message-error');
+
+    function validateEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(email);
+    }
+
+    function showError(element, show) {
+      element.style.display = show ? 'block' : 'none';
+    }
+
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      // Reset error messages
+      showError(nameError, false);
+      showError(emailError, false);
+      showError(messageError, false);
+      showError(formError, false);
+      formMessage.classList.add('hidden');
+
+      // Get and trim input values
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim();
+      const message = messageInput.value.trim();
+
+      // Validate inputs
+      let isValid = true;
+      if (!name) {
+        showError(nameError, true);
+        isValid = false;
+      }
+      if (!email || !validateEmail(email)) {
+        showError(emailError, true);
+        isValid = false;
+      }
+      if (!message) {
+        showError(messageError, true);
+        isValid = false;
+      }
+
+      if (!isValid) {
+        formError.classList.remove('hidden');
+        return;
+      }
+
+      // Simulate sending message
+      submitButton.disabled = true;
+      submitButton.textContent = 'Sending...';
+
+      setTimeout(() => {
+        formMessage.classList.remove('hidden');
+        contactForm.reset();
+        submitButton.disabled = false;
+        submitButton.textContent = 'Send Message';
+        setTimeout(() => formMessage.classList.add('hidden'), 3000);
+      }, 1000);
+    });
+
+    // To-Do List Functionality
+    const taskInput = document.getElementById('task-input');
+    const categorySelect = document.getElementById('category');
+    const prioritySelect = document.getElementById('priority');
+    const addTaskBtn = document.getElementById('add-task');
+    const taskList = document.getElementById('task-list');
+    const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text');
+    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+    function saveTasks() {
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const total = tasks.length;
+      const completed = tasks.filter(task => task.completed).length;
+      const percentage = total ? (completed / total) * 100 : 0;
+      progressBar.style.width = `${percentage}%`;
+      progressText.textContent = `${Math.round(percentage)}%`;
+    }
+
+    function renderTasks() {
+      taskList.innerHTML = '';
+      tasks.forEach((task, index) => {
+        const li = document.createElement('li');
+        li.className = `task-item flex justify-between items-center p-3 bg-white dark:bg-gray-700 rounded-md shadow ${task.completed ? 'completed' : ''}`;
+        li.innerHTML = `
+          <div>
+            <input type="checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask(${index})">
+            <span class="${task.completed ? 'line-through' : ''}">${task.text} [${task.category}, ${task.priority}]</span>
+          </div>
+          <button onclick="deleteTask(${index})" class="text-rose-500 dark:text-rose-300 hover:text-rose-600 dark:hover:text-rose-400">Delete</button>
+        `;
+        taskList.appendChild(li);
+      });
+      updateProgress();
+    }
+
+    function addTask() {
+      const text = taskInput.value.trim();
+      const category = categorySelect.value;
+      const priority = prioritySelect.value;
+      if (text) {
+        tasks.push({ text, category, priority, completed: false });
+        taskInput.value = '';
+        saveTasks();
+        renderTasks();
+      }
+    }
+
+    function toggleTask(index) {
+      tasks[index].completed = !tasks[index].completed;
+      saveTasks();
+      renderTasks();
+    }
+
+    function deleteTask(index) {
+      tasks.splice(index, 1);
+      saveTasks();
+      renderTasks();
+    }
+
+    addTaskBtn.addEventListener('click', addTask);
+    taskInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') addTask();
+    });
+
+    renderTasks();
+  </script>
+</body>
+</html>
