@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Blog</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #000;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      transition: background 0.5s;
+    }
+    .dark-mode { background: linear-gradient(135deg, #1a1a1a, #333); }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    #login-page, #blog-page { display: none; }
+    #login-page.active, #blog-page.active { display: block; }
+    
+    /* Login Form Styles from YouTube Short */
+    .login-form {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+      backdrop-filter: blur(10px);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      animation: neonGlow 1.5s ease-in-out infinite alternate;
+    }
+    .login-form h2 {
+      font-size: 2rem;
+      color: #0ff;
+      text-shadow: 0 0 10px #0ff;
+      margin-bottom: 1.5rem;
+    }
+    .login-form input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      background: transparent;
+      border: 2px solid #0ff;
+      border-radius: 5px;
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+      transition: box-shadow 0.3s;
+    }
+    .login-form input:focus {
+      box-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+    }
+    .login-form button {
+      width: 100%;
+      padding: 10px;
+      background: linear-gradient(45deg, #0ff, #f0f);
+      border: none;
+      border-radius: 5px;
+      color: #000;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: box-shadow 0.3s;
+    }
+    .login-form button:hover {
+      box-shadow: 0 0 20px #0ff, 0 0 30px #f0f;
+    }
+    @keyframes neonGlow {
+      from { box-shadow: 0 0 10px #0ff, 0 0 20px #0ff, 0 0 30px #f0f; }
+      to { box-shadow: 0 0 20px #0ff, 0 0 30px #0ff, 0 0 40px #f0f; }
+    }
+
+    /* Blog Page Styles */
+    header {
+      text-align: center;
+      padding: 40px 0;
+      animation: glow 2s infinite alternate;
+    }
+    h1 {
+      font-size: 3.5rem;
+      background: linear-gradient(to right, #0ff, #f0f, #0f0);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+    }
+    .post-form, .post {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+      backdrop-filter: blur(5px);
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #0ff;
+      border-radius: 5px;
+      background: rgba(0, 0, 0, 0.3);
+      color: #fff;
+      font-size: 1rem;
+    }
+    button {
+      background: linear-gradient(to right, #0ff, #f0f);
+      border: none;
+      cursor: pointer;
+      transition: box-shadow 0.3s;
+    }
+    button:hover {
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+    }
+    .post img {
+      max-width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+    .post img.loaded { opacity: 1; }
+    .comment {
+      margin-top: 10px;
+      padding: 10px;
+      background: rgba(0, 255, 255, 0.2);
+      border-radius: 5px;
+    }
+    .search-bar { margin-bottom: 20px; }
+    .dark-mode-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #0f0;
+      padding: 10px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    @media (max-width: 768px) {
+      h1 { font-size: 2rem; }
+      .container { padding: 10px; }
+      .post img { height: 150px; }
+      .login-form { padding: 1rem; max-width: 90%; }
+    }
+    @keyframes glow {
+      from { text-shadow: 0 0 10px rgba(0, 255, 255, 0.7); }
+      to { text-shadow: 0 0 20px rgba(0, 255, 255, 1); }
+    }
+  </style>
+</head>
+<body>
+  <div id="login-page" class="active">
+    <div class="login-form">
+      <h2>Login to My blog</h2>
+      <input type="text" id="username" placeholder="Username" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button onclick="login()">Login</button>
+    </div>
+  </div>
+  <div id="blog-page">
+    <div class="container">
+      <header>
+        <h1>My Blog</h1>
+        <p>A vibrant space for your thoughts!</p>
+      </header>
+      <div class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</div>
+      <input type="text" id="search" class="search-bar" placeholder="Search posts...">
+      <section class="post-form">
+        <h2>Create a Post</h2>
+        <input type="text" id="post-title" placeholder="Post Title" required>
+        <textarea id="post-content" placeholder="Write your post..." rows="4" required></textarea>
+        <input type="url" id="post-image" placeholder="Image URL (e.g., https://source.unsplash.com/random/800x600?neon)">
+        <button onclick="addPost()">Publish Post</button>
+      </section>
+      <section id="posts"></section>
+    </div>
+  </div>
+  <script>
+    // Login functionality
+    function login() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      if (username === 'mdshabrin' && password === '123') {
+        document.getElementById('login-page').classList.remove('active');
+        document.getElementById('blog-page').classList.add('active');
+      } else {
+        alert('Invalid credentials! Use username: user, password: pass123');
+      }
+    }
+
+    // Blog functionality
+    let posts = [
+      {
+        id: 1,
+        title: "city",
+        content: "Exploring the vibrant city under neon lights!",
+        image: "https://source.unsplash.com/random/800x600?neon",
+        comments: ["Amazing vibes!", "Love the colors!"]
+      },
+      {
+        id: 2,
+        title: "Dancing in the Glow",
+        content: "Grooving to the beat under neon skies, inspired by my love for dance!",
+        image: "https://source.unsplash.com/random/800x600?dance",
+        comments: ["So cool!", "Dance it out!"]
+      }
+    ];
+
+    function renderPosts(searchTerm = '') {
+      const postsContainer = document.getElementById('posts');
+      postsContainer.innerHTML = '';
+      posts
+        .filter(post => post.title.toLowerCase().includes(searchTerm.toLowerCase()) || post.content.toLowerCase().includes(searchTerm.toLowerCase()))
+        .forEach(post => {
+          const postElement = document.createElement('div');
+          postElement.className = 'post';
+          postElement.innerHTML = `
+            ${post.image ? `<img src="${post.image}" class="lazy-img" alt="${post.title}" loading="lazy">` : ''}
+            <h2>${post.title}</h2>
+            <p>${post.content}</p>
+            <div class="comments">
+              <h3>Comments</h3>
+              ${post.comments.map(c => `<div class="comment">${c}</div>`).join('')}
+              <input type="text" id="comment-${post.id}" placeholder="Add a comment">
+              <button onclick="addComment(${post.id})">Post Comment</button>
+            </div>
+          `;
+          postsContainer.appendChild(postElement);
+          const img = postElement.querySelector('img');
+          if (img) img.onload = () => img.classList.add('loaded');
+        });
+    }
+
+    function addPost() {
+      const title = document.getElementById('post-title').value;
+      const content = document.getElementById('post-content').value;
+      const image = document.getElementById('post-image').value;
+      if (!title || !content) return alert('Title and content are required!');
+      posts.unshift({
+        id: posts.length + 1,
+        title,
+        content,
+        image: image || '',
+        comments: []
+      });
+      renderPosts(document.getElementById('search').value);
+      document.getElementById('post-title').value = '';
+      document.getElementById('post-content').value = '';
+      document.getElementById('post-image').value = '';
+    }
+
+    function addComment(postId) {
+      const commentInput = document.getElementById(`comment-${postId}`);
+      const comment = commentInput.value;
+      if (!comment) return alert('Comment cannot be empty!');
+      const post = posts.find(p => p.id === postId);
+      post.comments.push(comment);
+      renderPosts(document.getElementById('search').value);
+    }
+
+    // Debounced search
+    let searchTimeout;
+    document.getElementById('search').addEventListener('input', (e) => {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => renderPosts(e.target.value), 300);
+    });
+
+    // Dark mode toggle
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+    }
+
+    // Initial render
+    renderPosts();
+  </script>
+</body>
+</html>
